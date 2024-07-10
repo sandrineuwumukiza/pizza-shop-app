@@ -1,0 +1,342 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "pizza_shop_backend",
+    "description": "API documentation for Shop app",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3000",
+  "basePath": "",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/api/shop-app/users/registerUser": {
+      "post": {
+        "summary": "Create an account",
+        "description": "To find more first sign Up",
+        "tags": [
+          "Buyer Auth"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "required": true,
+            "description": "signUp object"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "user created"
+          }
+        }
+      }
+    },
+    "/api/shop-app/users/login": {
+      "post": {
+        "summary": "Login into your account",
+        "description": "first login",
+        "tags": [
+          "Buyer Auth"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            },
+            "required": true,
+            "description": "signIn object"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "user logged in"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/addProduct": {
+      "post": {
+        "summary": "Create a new Product",
+        "description": "add a Product",
+        "tags": [
+          "Product"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "productName",
+            "type": "string",
+            "required": true,
+            "description": "Product name"
+          },
+          {
+            "in": "formData",
+            "name": "description",
+            "type": "string",
+            "required": true,
+            "description": "Product description"
+          },
+          {
+            "in": "formData",
+            "name": "image",
+            "type": "file",
+            "description": "Product image"
+          },
+          {
+            "in": "formData",
+            "name": "price",
+            "type": "number",
+            "required": true,
+            "description": "Product price"
+          },
+          {
+            "in": "formData",
+            "name": "category",
+            "type": "string",
+            "required": true,
+            "description": "Product category"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Product created"
+          },
+          "401": {
+            "description": "Bad request - Validation error"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/productList": {
+      "get": {
+        "summary": "Find all products",
+        "description": "Find all products",
+        "tags": [
+          "Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/productById/{id}": {
+      "get": {
+        "summary": "Find product by ID",
+        "description": "Find products by ID",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/updateProduct/{id}": {
+      "put": {
+        "summary": "Update a product",
+        "description": "Updating the products",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/Product"
+            },
+            "required": true,
+            "description": "Updated product object"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/category/{category}": {
+      "get": {
+        "summary": "Get a product by category",
+        "description": "Get a single product by category",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "description": "Category of the product to retrieve",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/productCount": {
+      "get": {
+        "summary": "Get product count",
+        "description": "Get the total product count",
+        "tags": [
+          "Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Count not found"
+          }
+        }
+      }
+    },
+    "/api/shop-app/products/deleteProduct/{id}": {
+      "delete": {
+        "summary": "Delete a product by ID",
+        "description": "Delete a product by ID",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product deleted"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "required": true
+        },
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "productName": {
+          "type": "string",
+          "required": true
+        },
+        "description": {
+          "type": "string",
+          "required": true
+        },
+        "price": {
+          "type": "number",
+          "required": true
+        },
+        "category": {
+          "type": "string",
+          "required": true,
+          "enum": [
+            "Food",
+            "Fruits",
+            "Alcohol",
+            "Juice"
+          ]
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "public_id": {
+              "type": "string"
+            },
+            "asset_id": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string"
+            }
+          }
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "default": "Date.now"
+        }
+      },
+      "required": [
+        "productName",
+        "description",
+        "price",
+        "category",
+        "image"
+      ]
+    }
+      }
+    }
+
