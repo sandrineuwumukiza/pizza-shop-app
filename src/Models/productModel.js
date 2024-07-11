@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-  productName: {
+  name: {
     type: String,
     required: true,
   },
@@ -11,7 +11,11 @@ const productSchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    required:true,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
   category: {
     type: String,
@@ -32,10 +36,7 @@ const productSchema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  },
-  isExpired: Boolean,
-  isFeatured: Boolean,
-  featureEndDate: Date
+  }
 }, {
   timestamps: true
 

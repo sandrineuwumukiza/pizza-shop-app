@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import express, { Router } from 'express';
 import cors from "cors";
+import bodyParser from 'body-parser'
 import connectDB from './src/db/db.js';
 import router from './src/routes/index.js';
 import swaggerUi from 'swagger-ui-express';
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(cors(corsOptions));
 // app.use(bodyParser)
 app.use(express.json());
+app.use(bodyParser.json());
 // app.use(cookieParser());
 
 app.use('/api/shop-app', router);

@@ -1,30 +1,42 @@
 import Product from '../Models/productModel.js';
+import cloudinary from '../utils/cloudinary.js';
 import upload from '../utils/uploadImage.js';
-import {v2 as cloudinary} from 'cloudinary';
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+
 
 export const addProduct = async (req, res, next) => {
+  const { name, price, description, category } = req.body;
+  const image = req.file;
+
+  
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ msg: 'Authorization denied' });
+  }
+
   try {
-    const result = await cloudinary.uploader.upload(req.file.path);
+    // Upload image to Cloudinary
+    const result = await cloudinary.uploader.upload(image.path, {
+      folder: 'ecommerce',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'],
+    });
+
     const newProduct = new Product({
-      productName: req.body.productName,
-      description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
+      name,
+      price,
+      description,
+      category,
       image: {
-        publicId: result.public_id,
+        public_id: result.public_id,
+        asset_id: result.asset_id,
         url: result.secure_url,
       },
+      userId: req.user.id,
     });
-    await newProduct.save();
-    res.status(201).json(newProduct);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to add product.' });
+
+    const product = await newProduct.save();
+    res.json(product);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
   }
 };

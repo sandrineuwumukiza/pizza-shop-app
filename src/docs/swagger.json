@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "pizza_shop_backend",
+    "title": "Pizza Shop Backend API",
     "description": "API documentation for Shop app",
     "version": "1.0.0"
   },
@@ -11,11 +11,19 @@
     "http",
     "https"
   ],
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "Enter JWT token in the format: Bearer <token>"
+    }
+  },
   "paths": {
     "/api/shop-app/users/registerUser": {
       "post": {
         "summary": "Create an account",
-        "description": "To find more first sign Up",
+        "description": "Register a new user with role (user or admin)",
         "tags": [
           "Buyer Auth"
         ],
@@ -24,15 +32,18 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/RegisterUserRequest"
             },
             "required": true,
-            "description": "signUp object"
+            "description": "User registration details"
           }
         ],
         "responses": {
           "201": {
-            "description": "user created"
+            "description": "User created"
+          },
+          "400": {
+            "description": "Bad request - User already exists or missing fields"
           }
         }
       }
@@ -40,7 +51,7 @@
     "/api/shop-app/users/login": {
       "post": {
         "summary": "Login into your account",
-        "description": "first login",
+        "description": "Authenticate and login an existing user",
         "tags": [
           "Buyer Auth"
         ],
@@ -49,15 +60,18 @@
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/User"
+              "$ref": "#/definitions/LoginRequest"
             },
             "required": true,
-            "description": "signIn object"
+            "description": "User login credentials"
           }
         ],
         "responses": {
-          "201": {
-            "description": "user logged in"
+          "200": {
+            "description": "User logged in successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid credentials"
           }
         }
       }
@@ -65,7 +79,7 @@
     "/api/shop-app/products/addProduct": {
       "post": {
         "summary": "Create a new Product",
-        "description": "add a Product",
+        "description": "Add a new product to the database",
         "tags": [
           "Product"
         ],
@@ -73,6 +87,13 @@
           "multipart/form-data"
         ],
         "parameters": [
+          {
+            "in": "formData",
+            "name": "userId",
+            "type": "string",
+            "required": true,
+            "description": "User ID of the product owner"
+          },
           {
             "in": "formData",
             "name": "productName",
@@ -104,15 +125,26 @@
             "in": "formData",
             "name": "category",
             "type": "string",
+            "enum": [
+              "Food",
+              "Fruits",
+              "Alcohol",
+              "Juice"
+            ],
             "required": true,
             "description": "Product category"
           }
         ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "responses": {
           "201": {
-            "description": "Product created"
+            "description": "Product created successfully"
           },
-          "401": {
+          "400": {
             "description": "Bad request - Validation error"
           }
         }
@@ -120,8 +152,8 @@
     },
     "/api/shop-app/products/productList": {
       "get": {
-        "summary": "Find all products",
-        "description": "Find all products",
+        "summary": "Get all products",
+        "description": "Retrieve a list of all products",
         "tags": [
           "Product"
         ],
@@ -130,15 +162,15 @@
             "description": "Successful retrieval"
           },
           "404": {
-            "description": "Product not found"
+            "description": "Products not found"
           }
         }
       }
     },
     "/api/shop-app/products/productById/{id}": {
       "get": {
-        "summary": "Find product by ID",
-        "description": "Find products by ID",
+        "summary": "Get product by ID",
+        "description": "Retrieve a product by its ID",
         "tags": [
           "Product"
         ],
@@ -146,9 +178,9 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID of the product to retrieve",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID of the product to retrieve"
           }
         ],
         "responses": {
@@ -163,8 +195,8 @@
     },
     "/api/shop-app/products/updateProduct/{id}": {
       "put": {
-        "summary": "Update a product",
-        "description": "Updating the products",
+        "summary": "Update product by ID",
+        "description": "Update an existing product by its ID",
         "tags": [
           "Product"
         ],
@@ -172,9 +204,9 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID of the product to update",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID of the product to update"
           },
           {
             "in": "body",
@@ -183,12 +215,12 @@
               "$ref": "#/definitions/Product"
             },
             "required": true,
-            "description": "Updated product object"
+            "description": "Updated product details"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful retrieval"
+            "description": "Product updated successfully"
           },
           "404": {
             "description": "Product not found"
@@ -196,53 +228,10 @@
         }
       }
     },
-    "/api/shop-app/products/category/{category}": {
-      "get": {
-        "summary": "Get a product by category",
-        "description": "Get a single product by category",
-        "tags": [
-          "Product"
-        ],
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "description": "Category of the product to retrieve",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful retrieval"
-          },
-          "404": {
-            "description": "Category not found"
-          }
-        }
-      }
-    },
-    "/api/shop-app/products/productCount": {
-      "get": {
-        "summary": "Get product count",
-        "description": "Get the total product count",
-        "tags": [
-          "Product"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful retrieval"
-          },
-          "404": {
-            "description": "Count not found"
-          }
-        }
-      }
-    },
     "/api/shop-app/products/deleteProduct/{id}": {
       "delete": {
-        "summary": "Delete a product by ID",
-        "description": "Delete a product by ID",
+        "summary": "Delete product by ID",
+        "description": "Delete an existing product by its ID",
         "tags": [
           "Product"
         ],
@@ -250,14 +239,14 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID of the product to delete",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "ID of the product to delete"
           }
         ],
         "responses": {
           "204": {
-            "description": "Product deleted"
+            "description": "Product deleted successfully"
           },
           "404": {
             "description": "Product not found"
@@ -267,7 +256,7 @@
     }
   },
   "definitions": {
-    "User": {
+    "RegisterUserRequest": {
       "type": "object",
       "properties": {
         "name": {
@@ -281,33 +270,62 @@
         "password": {
           "type": "string",
           "required": true
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "admin"
+          ],
+          "default": "user"
+        }
+      }
+    },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "required": true
+        },
+        "password": {
+          "type": "string",
+          "required": true
         }
       }
     },
     "Product": {
       "type": "object",
       "properties": {
+        "userId": {
+          "type": "string",
+          "description": "User ID of the product owner"
+        },
         "productName": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Product name"
         },
         "description": {
           "type": "string",
-          "required": true
+          "required": true,
+          "description": "Product description"
         },
         "price": {
           "type": "number",
-          "required": true
+          "required": true,
+          "description": "Product price"
         },
         "category": {
           "type": "string",
-          "required": true,
           "enum": [
             "Food",
             "Fruits",
             "Alcohol",
             "Juice"
-          ]
+          ],
+          "required": true,
+          "description": "Product category"
         },
         "image": {
           "type": "object",
@@ -321,22 +339,22 @@
             "url": {
               "type": "string"
             }
-          }
+          },
+          "description": "Product image"
         },
         "updatedAt": {
           "type": "string",
           "format": "date-time",
-          "default": "Date.now"
+          "description": "Last update timestamp"
         }
       },
       "required": [
+        "userId",
         "productName",
         "description",
         "price",
-        "category",
-        "image"
+        "category"
       ]
     }
-      }
-    }
-
+  }
+}
