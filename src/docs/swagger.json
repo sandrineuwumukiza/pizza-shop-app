@@ -20,7 +20,7 @@
     }
   },
   "paths": {
-    "/api/shop-app/users/registerUser": {
+    "/users/registerUser": {
       "post": {
         "summary": "Create an account",
         "description": "Register a new user with role (user or admin)",
@@ -48,7 +48,7 @@
         }
       }
     },
-    "/api/shop-app/users/login": {
+    "/users/login": {
       "post": {
         "summary": "Login into your account",
         "description": "Authenticate and login an existing user",
@@ -76,7 +76,7 @@
         }
       }
     },
-    "/api/shop-app/products/addProduct": {
+    "/products/addProduct": {
       "post": {
         "summary": "Create a new Product",
         "description": "Add a new product to the database",
@@ -150,7 +150,7 @@
         }
       }
     },
-    "/api/shop-app/products/productList": {
+    "/products/productList": {
       "get": {
         "summary": "Get all products",
         "description": "Retrieve a list of all products",
@@ -167,7 +167,7 @@
         }
       }
     },
-    "/api/shop-app/products/productById/{id}": {
+    "/products/productById/{id}": {
       "get": {
         "summary": "Get product by ID",
         "description": "Retrieve a product by its ID",
@@ -193,7 +193,7 @@
         }
       }
     },
-    "/api/shop-app/products/updateProduct/{id}": {
+    "/products/updateProduct/{id}": {
       "put": {
         "summary": "Update product by ID",
         "description": "Update an existing product by its ID",
@@ -228,7 +228,7 @@
         }
       }
     },
-    "/api/shop-app/products/deleteProduct/{id}": {
+    "/products/deleteProduct/{id}": {
       "delete": {
         "summary": "Delete product by ID",
         "description": "Delete an existing product by its ID",
