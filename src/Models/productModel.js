@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const productSchema = new mongoose.Schema({
-  name: {
+  productName: {
     type: String,
     required: true,
   },
@@ -12,7 +12,7 @@ const productSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
@@ -20,7 +20,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required:true,
-    "enums":"['Food,Fruits, Alcohol, Juice']"
+    "enums":"['Food,Fruits, Alcohol, Soft drinks and Juice, Coffee, Wine']"
   },
   image: {
     public_id: {

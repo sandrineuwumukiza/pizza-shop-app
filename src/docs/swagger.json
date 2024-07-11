@@ -322,7 +322,10 @@
             "Food",
             "Fruits",
             "Alcohol",
-            "Juice"
+            "Juice",
+            "Soft drinks and Juice", 
+            "Coffee", 
+            "Wine"
           ],
           "required": true,
           "description": "Product category"

@@ -2,12 +2,9 @@ import Product from '../Models/productModel.js';
 import cloudinary from '../utils/cloudinary.js';
 import upload from '../utils/uploadImage.js';
 
-
-
 export const addProduct = async (req, res, next) => {
-  const { name, price, description, category } = req.body;
+  const { productName, price, description, category } = req.body;
   const image = req.file;
-
   
   if (req.user.role !== 'admin') {
     return res.status(403).json({ msg: 'Authorization denied' });
@@ -21,7 +18,7 @@ export const addProduct = async (req, res, next) => {
     });
 
     const newProduct = new Product({
-      name,
+      productName,
       price,
       description,
       category,
@@ -30,7 +27,7 @@ export const addProduct = async (req, res, next) => {
         asset_id: result.asset_id,
         url: result.secure_url,
       },
-      userId: req.user.id,
+      userId: req.user.id, 
     });
 
     const product = await newProduct.save();
@@ -38,5 +35,55 @@ export const addProduct = async (req, res, next) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
+  }
+};
+
+
+export const updateProductById = async (req, res) => {
+  try {
+      const productId = req.params.id;
+      const updateData = req.body;
+
+      const updatedProduct = await Product.findByIdAndUpdate(productId, updateData, { new: true });
+
+      if (!updatedProduct) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      res.status(200).json(updatedProduct);
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export const getProductsByCategory = async (req, res) => {
+  try {
+      const category = req.params.category;
+
+      const products = await Product.find({ category });
+
+      if (products.length === 0) {
+          return res.status(404).json({ message: 'No products found in this category' });
+      }
+
+      res.status(200).json(products);
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
+  }
+};
+
+export const deleteProductById = async (req, res) => {
+  try {
+      const productId = req.params.id;
+
+      const deletedProduct = await Product.findByIdAndDelete(productId);
+
+      if (!deletedProduct) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
+
+      res.status(204).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+      res.status(500).json({ message: 'Server error', error });
   }
 };
