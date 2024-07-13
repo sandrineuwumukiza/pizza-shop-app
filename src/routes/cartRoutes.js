@@ -1,18 +1,17 @@
 import express from 'express';
-import { addProductToCart, getCart, removeProductFromCart, updateProductInCart, getAllCarts } from "../controllers/cartController.js";
-// import { validatedCart  } from '../utils/validation.js';
+import { getCart, removeFromCart, addToCart } from '../controllers/cartController.js';
 const cartRouter = express.Router();
 // import allValidation from '../utils/validation.js';
 
 
 
-cartRouter.post('/addToCart', addProductToCart)
-cartRouter.delete('/removeCart', removeProductFromCart)
-cartRouter.get('/getCart/:id', getCart)
+cartRouter.post('/addToCart', addToCart)
+cartRouter.delete('/removeFromCart/:id', removeFromCart)
+cartRouter.get('/viewCart', getCart)
 // cartRouter.post('/add', addProductToCart)
-cartRouter.get('/getCartList', getAllCarts)
-cartRouter.delete('/remove/:id', removeProductFromCart)
-cartRouter.put('/update/:id', updateProductInCart)
+// cartRouter.get('/getCartList', getAllCarts)
+// cartRouter.delete('/remove/:id', removeProductFromCart)
+// cartRouter.put('/update/:id', updateProductInCart)
 
 
 export default cartRouter;

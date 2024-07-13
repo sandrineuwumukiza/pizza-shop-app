@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express, { Router } from 'express';
+import session from 'express-session';
 import cors from "cors";
 import bodyParser from 'body-parser'
 import connectDB from './src/db/db.js';
@@ -25,6 +26,12 @@ app.use(cors(corsOptions));
 // app.use(bodyParser)
 app.use(express.json());
 app.use(bodyParser.json());
+app.use(session({
+    secret: `${process.env.SESSION_SECRET}`, // Replace with a secure random string (used to sign the session ID cookie)
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Set secure: true if using HTTPS
+  }));
 // app.use(cookieParser());
 
 app.use('/', router);

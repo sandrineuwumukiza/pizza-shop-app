@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Pizza Shop Backend API",
-    "description": "API documentation for Shop app",
+    "description": "API documentation for Pizza Shop app",
     "version": "1.0.0"
   },
   "host": "localhost:3000",
@@ -129,7 +129,10 @@
               "Food",
               "Fruits",
               "Alcohol",
-              "Juice"
+              "Juice",
+              "Soft drinks and Juice", 
+              "Coffee", 
+              "Wine"
             ],
             "required": true,
             "description": "Product category"
@@ -253,6 +256,92 @@
           }
         }
       }
+    },
+    "/cart/addToCart": {
+      "post": {
+        "summary": "Add product to cart",
+        "description": "Add a product to the user's cart",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/AddToCartRequest"
+            },
+            "required": true,
+            "description": "Product details to add to cart"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product added to cart successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid product data"
+          }
+        }
+      }
+    },
+    "/cart/removeFromCart/{id}": {
+      "delete": {
+        "summary": "Remove product from cart",
+        "description": "Remove a product from the user's cart by product ID",
+        "tags": [
+          "Cart"
+        ],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "ID of the product to remove from cart"
+          }
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Product removed from cart successfully"
+          },
+          "404": {
+            "description": "Product not found in cart"
+          }
+        }
+      }
+    },
+    "/cart/viewCart": {
+      "get": {
+        "summary": "View cart",
+        "description": "Retrieve the user's current cart contents",
+        "tags": [
+          "Cart"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of cart contents"
+          },
+          "404": {
+            "description": "Cart is empty"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -298,23 +387,19 @@
       "type": "object",
       "properties": {
         "userId": {
-          "type": "string",
-          "description": "User ID of the product owner"
+          "type": "string"
         },
         "productName": {
-          "type": "string",
-          "required": true,
-          "description": "Product name"
+          "type": "string"
         },
         "description": {
-          "type": "string",
-          "required": true,
-          "description": "Product description"
+          "type": "string"
+        },
+        "image": {
+          "type": "string"
         },
         "price": {
-          "type": "number",
-          "required": true,
-          "description": "Product price"
+          "type": "number"
         },
         "category": {
           "type": "string",
@@ -326,37 +411,25 @@
             "Soft drinks and Juice", 
             "Coffee", 
             "Wine"
-          ],
-          "required": true,
-          "description": "Product category"
-        },
-        "image": {
-          "type": "object",
-          "properties": {
-            "public_id": {
-              "type": "string"
-            },
-            "asset_id": {
-              "type": "string"
-            },
-            "url": {
-              "type": "string"
-            }
-          },
-          "description": "Product image"
-        },
-        "updatedAt": {
+          ]
+        }
+      }
+    },
+    "AddToCartRequest": {
+      "type": "object",
+      "properties": {
+        "productId": {
           "type": "string",
-          "format": "date-time",
-          "description": "Last update timestamp"
+          "description": "ID of the product to add to cart"
+        },
+        "quantity": {
+          "type": "integer",
+          "description": "Quantity of the product to add to cart"
         }
       },
       "required": [
-        "userId",
-        "productName",
-        "description",
-        "price",
-        "category"
+        "productId",
+        "quantity"
       ]
     }
   }
