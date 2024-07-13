@@ -22,9 +22,8 @@ const corsOptions ={
 
 const app = express();
 app.use(express.json()); 
-app.use(cors(corsOptions));
-// app.use(bodyParser)
-app.use(express.json());
+app.use(cors());
+// app.use(express.json());
 app.use(bodyParser.json());
 app.use(session({
     secret: `${process.env.SESSION_SECRET}`, // Replace with a secure random string (used to sign the session ID cookie)
