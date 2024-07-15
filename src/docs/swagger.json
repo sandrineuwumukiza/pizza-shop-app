@@ -376,7 +376,7 @@
     "RegisterUserRequest": {
       "type": "object",
       "properties": {
-        "username": {
+        "name": {
           "type": "string"
         },
         "email": {
