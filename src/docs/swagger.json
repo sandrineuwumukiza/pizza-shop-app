@@ -130,8 +130,8 @@
               "Fruits",
               "Alcohol",
               "Juice",
-              "Soft drinks and Juice", 
-              "Coffee", 
+              "Soft drinks and Juice",
+              "Coffee",
               "Wine"
             ],
             "required": true,
@@ -299,7 +299,7 @@
         ],
         "parameters": [
           {
-            "name": "productId",
+            "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
@@ -342,31 +342,52 @@
           }
         }
       }
+    },
+    "/pay": {  
+      "post": {
+        "summary": "Initiate a payment",
+        "description": "Process a payment using Flutterwave",
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/PaymentRequest"
+            },
+            "required": true,
+            "description": "Payment details"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment successful"
+          },
+          "400": {
+            "description": "Bad request - Invalid payment data"
+          }
+        }
+      }
     }
   },
   "definitions": {
     "RegisterUserRequest": {
       "type": "object",
       "properties": {
-        "name": {
-          "type": "string",
-          "required": true
+        "username": {
+          "type": "string"
         },
         "email": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "password": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "role": {
           "type": "string",
-          "enum": [
-            "user",
-            "admin"
-          ],
-          "default": "user"
+          "enum": ["user", "admin"]
         }
       }
     },
@@ -374,12 +395,10 @@
       "type": "object",
       "properties": {
         "email": {
-          "type": "string",
-          "required": true
+          "type": "string"
         },
         "password": {
-          "type": "string",
-          "required": true
+          "type": "string"
         }
       }
     },
@@ -408,8 +427,8 @@
             "Fruits",
             "Alcohol",
             "Juice",
-            "Soft drinks and Juice", 
-            "Coffee", 
+            "Soft drinks and Juice",
+            "Coffee",
             "Wine"
           ]
         }
@@ -419,18 +438,57 @@
       "type": "object",
       "properties": {
         "productId": {
-          "type": "string",
-          "description": "ID of the product to add to cart"
+          "type": "string"
         },
         "quantity": {
-          "type": "integer",
-          "description": "Quantity of the product to add to cart"
+          "type": "integer"
         }
-      },
-      "required": [
-        "productId",
-        "quantity"
-      ]
+      }
+    },
+    "PaymentRequest": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "payment_method": {
+          "type": "string"
+        },
+        "tx_ref": {
+          "type": "string"
+        },
+        "redirect_url": {
+          "type": "string"
+        },
+        "customer": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "phonenumber": {
+              "type": "string"
+            }
+          }
+        },
+        "customizations": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
     }
   }
 }
