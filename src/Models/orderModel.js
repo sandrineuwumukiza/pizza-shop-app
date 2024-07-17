@@ -1,56 +1,72 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
-const orderSchema=new mongoose.Schema({
-    buyerId: { 
-      type: mongoose.Schema.Types.ObjectId, 
-      ref: 'User', 
-      required: true 
+const orderSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    require: true,
+  },
+  products: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+      },
+      image: {
+        type: String,
+        required: true,
+      },
     },
-    orderItems: [
-      {
-        orderItemsId: {
-             type: mongoose.Schema.Types.ObjectId, 
-             ref: 'orderItem', 
-             required: true
-             }
-      }
-    ],
-    shippingAddress:{
-      type:String, 
-      required: true
-    },
-    city:{
-      type:String, 
-      required: true
-    },
-    country:{
-      type:String, 
-      required: true
-    },
-    phone:{
-      type:String, 
-      required: true
-    },
-    transactionStatus: {
+  ],
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
+  shippingAddress: {
+    name: {
       type: String,
-      enum: ['pending', 'shipped', 'delivered'],
-      default: 'pending',
+      required: true,
     },
-   
-    totalPrice: { 
-      type: Number, 
-      required: true
-     },
-      dateOrdered:{
-      type:Date,
-      default:Date.now
-    }
-    // isPaid: { 
-    //   type: Boolean, 
-    //   default: false 
-    // },
-    
-})
-const Order = new mongoose.model('order', orderSchema);
+    mobileNo: {
+      type: String,
+      required: true,
+    },
+    houseNo: {
+      type: String,
+      required: true,
+    },
+    street: {
+      type: String,
+      required: true,
+    },
+    landmark: {
+      type: String,
+      required: true,
+    },
+    postalCode: {
+      type: String,
+      required: true,
+    },
+  },
+  paymentMethod: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
 
-export default Order;
+
+const Order = mongoose.model("Order",orderSchema);
+
+module.exports = Order;

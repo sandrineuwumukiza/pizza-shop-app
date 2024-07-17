@@ -196,6 +196,32 @@
         }
       }
     },
+    "/products/category/{category}": {
+      "get": {
+        "summary": "Get product by category",
+        "description": "Retrieve a product by its category",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "category of the product to retrieve"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval"
+          },
+          "404": {
+            "description": "Product not found"
+          }
+        }
+      }
+    },
     "/products/updateProduct/{id}": {
       "put": {
         "summary": "Update product by ID",

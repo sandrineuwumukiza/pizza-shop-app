@@ -2,10 +2,10 @@ import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Uploads will be stored in the 'uploads/' directory
+    cb(null, 'uploads/'); 
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now()); // Rename the file to avoid duplicates
+    cb(null, file.fieldname + '-' + Date.now()); 
   },
 });
 
