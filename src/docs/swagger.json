@@ -209,7 +209,7 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "category of the product to retrieve"
+            "description": "Category of the product to retrieve"
           }
         ],
         "responses": {
@@ -364,35 +364,115 @@
             "description": "Successful retrieval of cart contents"
           },
           "404": {
-            "description": "Cart is empty"
+            "description": "Cart not found"
           }
         }
       }
     },
-    "/pay": {  
+    "/cart/checkout": {
       "post": {
-        "summary": "Initiate a payment",
-        "description": "Process a payment using Flutterwave",
+        "summary": "Checkout",
+        "description": "Complete the purchase and clear the cart",
         "tags": [
-          "Payment"
+          "Cart"
         ],
         "parameters": [
           {
             "in": "body",
             "name": "body",
             "schema": {
-              "$ref": "#/definitions/PaymentRequest"
+              "$ref": "#/definitions/CheckoutRequest"
             },
             "required": true,
-            "description": "Payment details"
+            "description": "Checkout details"
           }
         ],
         "responses": {
           "200": {
-            "description": "Payment successful"
+            "description": "Checkout successful"
           },
           "400": {
-            "description": "Bad request - Invalid payment data"
+            "description": "Bad request - Invalid checkout details"
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "summary": "Get user profile",
+        "description": "Retrieve the profile of the currently authenticated user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of user profile"
+          },
+          "401": {
+            "description": "Unauthorized - User not authenticated"
+          }
+        }
+      }
+    },
+    "/users/profile/update": {
+      "put": {
+        "summary": "Update user profile",
+        "description": "Update the profile information of the currently authenticated user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "schema": {
+              "$ref": "#/definitions/UserProfileUpdateRequest"
+            },
+            "required": true,
+            "description": "Updated profile information"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile updated successfully"
+          },
+          "400": {
+            "description": "Bad request - Invalid profile data"
+          },
+          "401": {
+            "description": "Unauthorized - User not authenticated"
+          }
+        }
+      }
+    },
+    "/users/profile/${id}": {
+      "delete": {
+        "summary": "Delete user profile",
+        "description": "Delete the profile of the currently authenticated user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Profile deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - User not authenticated"
           }
         }
       }
@@ -413,9 +493,18 @@
         },
         "role": {
           "type": "string",
-          "enum": ["user", "admin"]
+          "enum": [
+            "user",
+            "admin"
+          ]
         }
-      }
+      },
+      "required": [
+        "name",
+        "email",
+        "password",
+        "role"
+      ]
     },
     "LoginRequest": {
       "type": "object",
@@ -426,7 +515,11 @@
         "password": {
           "type": "string"
         }
-      }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
     },
     "Product": {
       "type": "object",
@@ -452,13 +545,19 @@
             "Food",
             "Fruits",
             "Alcohol",
-            "Juice",
             "Soft drinks and Juice",
             "Coffee",
             "Wine"
           ]
         }
-      }
+      },
+      "required": [
+        "userId",
+        "productName",
+        "description",
+        "price",
+        "category"
+      ]
     },
     "AddToCartRequest": {
       "type": "object",
@@ -469,50 +568,40 @@
         "quantity": {
           "type": "integer"
         }
-      }
+      },
+      "required": [
+        "productId",
+        "quantity"
+      ]
     },
-    "PaymentRequest": {
+    "CheckoutRequest": {
       "type": "object",
       "properties": {
-        "amount": {
-          "type": "number"
+        "paymentMethod": {
+          "type": "string",
+          "enum": [
+            "credit_card",
+            "paypal",
+            "mobilemoney"
+          ]
         },
-        "currency": {
+        "shippingAddress": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "paymentMethod",
+        "shippingAddress"
+      ]
+    },
+    "UserProfileUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
           "type": "string"
         },
-        "payment_method": {
+        "email": {
           "type": "string"
-        },
-        "tx_ref": {
-          "type": "string"
-        },
-        "redirect_url": {
-          "type": "string"
-        },
-        "customer": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string"
-            },
-            "name": {
-              "type": "string"
-            },
-            "phonenumber": {
-              "type": "string"
-            }
-          }
-        },
-        "customizations": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            },
-            "description": {
-              "type": "string"
-            }
-          }
         }
       }
     }
